@@ -116,7 +116,7 @@ const SpaceTradeWrapped: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-screen bg-black overflow-hidden">
+    <div className="relative w-full h-dvh bg-black overflow-hidden">
       <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-4">
         {stories.map((_, index) => (
           <div
