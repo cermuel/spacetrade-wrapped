@@ -4,29 +4,121 @@ import { motion, AnimatePresence } from "framer-motion";
 import { sampleUserData, UserData } from "@/utils";
 import Intro from "./components/stories/intro";
 import TotalTrades from "./components/stories/total-trades";
-import Volume from "./components/stories/volume";
 import Outro from "./components/stories/outro";
-import FavoriteAsset from "./components/stories/favorite-asset";
-import Streak from "./components/stories/streak";
-import Ranking from "./components/stories/ranking";
-import Activities from "./components/stories/activities";
 import FloatingParticles from "./components/floating-particles";
+import BestMonth from "./components/stories/best-month";
+import CryptoJourney from "./components/stories/crypto-journey";
+import GiftcardMoves from "./components/stories/giftcards";
+import { GoUnmute, GoMute } from "react-icons/go";
+import Transactions from "./components/stories/transactions";
+import Electricity from "./components/stories/electricity";
+import Impact from "./components/stories/impact";
+import Rank from "./components/stories/rank";
+import ShareDownload from "./components/share-download";
+//@ts-expect-error: module not found
+import { useToImage } from "@hcorta/react-to-image";
+import TotalTradesExport from "./components/export/stories/total-trades";
+import BestMonthExport from "./components/export/stories/best-month";
+import GiftcardExport from "./components/export/stories/giftcard";
+import CryptoExport from "./components/export/stories/crypto-journeey";
+import UtilityExport from "./components/export/stories/utility";
+import ImpactExport from "./components/export/stories/impact";
+import RankExport from "./components/export/stories/rank";
+import TransactionsExport from "./components/export/stories/transactions";
+
+const options = {
+  width: 1080,
+  height: 1080,
+  pixelRatio: 4,
+  backgroundColor: "#000",
+};
 
 const SpaceTradeWrapped: React.FC = () => {
+  const { ref, isLoading, getPng } = useToImage(options);
+  const {
+    ref: gcRef,
+    isLoading: gcLoading,
+    getPng: gcGetPng,
+  } = useToImage(options);
+  const {
+    ref: cryptoRef,
+    isLoading: cryptoLoading,
+    getPng: cryptoGetPng,
+  } = useToImage(options);
+  const {
+    ref: monthRef,
+    isLoading: monthLoading,
+    getPng: monthGetPng,
+  } = useToImage(options);
+  const {
+    ref: utilityRef,
+    isLoading: utilityLoading,
+    getPng: utilityGetPng,
+  } = useToImage(options);
+  const {
+    ref: impactRef,
+    isLoading: impactLoading,
+    getPng: impactGetPng,
+  } = useToImage(options);
+  const {
+    ref: transactionsRef,
+    isLoading: transactionsLoading,
+    getPng: transactionsGetPng,
+  } = useToImage(options);
+  const {
+    ref: rankRef,
+    isLoading: rankLoading,
+    getPng: rankGetPng,
+  } = useToImage(options);
+
   const [currentStory, setCurrentStory] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [userData] = useState<UserData>(sampleUserData);
+  const [muted, setMuted] = useState(true);
+  const audioRef = React.useRef<HTMLAudioElement>(null);
+
+  const loading =
+    isLoading ||
+    gcLoading ||
+    cryptoLoading ||
+    monthLoading ||
+    utilityLoading ||
+    rankLoading ||
+    transactionsLoading ||
+    impactLoading;
+
+  useEffect(() => {
+    audioRef.current?.play().catch(() => {});
+  }, []);
+
+  const handleUnmute = async () => {
+    if (!audioRef.current) return;
+
+    if (muted) {
+      audioRef.current.muted = false;
+      setMuted(false);
+    } else {
+      audioRef.current.muted = true;
+      setMuted(true);
+    }
+
+    try {
+      await audioRef.current.play();
+    } catch {}
+  };
 
   const stories = [
     { id: 1, type: "intro" },
     { id: 2, type: "total-trades" },
-    { id: 3, type: "volume" },
-    { id: 4, type: "favorite-asset" },
-    { id: 5, type: "streak" },
-    { id: 6, type: "ranking" },
-    { id: 7, type: "activities" },
-    { id: 8, type: "outro" },
+    { id: 3, type: "best-month" },
+    { id: 4, type: "crypto-journey" },
+    { id: 5, type: "giftcard-moves" },
+    { id: 6, type: "transactions" },
+    { id: 7, type: "utility" },
+    { id: 8, type: "impact" },
+    { id: 9, type: "rank" },
+    { id: 10, type: "outro" },
   ];
 
   useEffect(() => {
@@ -41,12 +133,20 @@ const SpaceTradeWrapped: React.FC = () => {
           }
           return 100;
         }
-        return prev + 1.5;
+        return prev + 1;
       });
     }, 50);
 
     return () => clearInterval(interval);
   }, [currentStory, isPaused, stories.length]);
+
+  useEffect(() => {
+    if (loading) {
+      setIsPaused(true);
+    } else {
+      setIsPaused(false);
+    }
+  }, [loading]);
 
   const goToNext = () => {
     if (currentStory < stories.length - 1) {
@@ -84,20 +184,26 @@ const SpaceTradeWrapped: React.FC = () => {
       case "total-trades":
         return <TotalTrades userData={userData} />;
 
-      case "volume":
-        return <Volume userData={userData} />;
+      case "best-month":
+        return <BestMonth userData={userData} />;
 
-      case "favorite-asset":
-        return <FavoriteAsset userData={userData} />;
+      case "crypto-journey":
+        return <CryptoJourney userData={userData} />;
 
-      case "streak":
-        return <Streak userData={userData} />;
+      case "giftcard-moves":
+        return <GiftcardMoves userData={userData} />;
 
-      case "ranking":
-        return <Ranking userData={userData} />;
+      case "transactions":
+        return <Transactions userData={userData} />;
 
-      case "activities":
-        return <Activities userData={userData} />;
+      case "utility":
+        return <Electricity userData={userData} />;
+
+      case "impact":
+        return <Impact userData={userData} />;
+
+      case "rank":
+        return <Rank userData={userData} />;
 
       case "outro":
         return (
@@ -117,11 +223,19 @@ const SpaceTradeWrapped: React.FC = () => {
 
   return (
     <div className="relative w-full h-dvh bg-black overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-4">
+      <audio src="/audio/bg.wav" loop ref={audioRef} muted />
+      <button
+        onClick={handleUnmute}
+        className="absolute z-20 bottom-8 right-8  border border-[#212121] bg-[#171717] rounded-full w-10 aspect-square flex items-center justify-center cursor-pointer disabled:cursor-not-allowed!"
+      >
+        {muted ? <GoMute /> : <GoUnmute />}
+      </button>
+
+      <div className="absolute top-1 lg:top-2 -translate-x-1/2 left-1/2 right-0 z-20 flex gap-1.5 sm:gap-3 p-4 w-full max-w-[1200px]">
         {stories.map((_, index) => (
           <div
             key={index}
-            className="flex-1 h-1 bg-gray-700/50 rounded-full overflow-hidden"
+            className="flex-1 h-1.5 sm:h-2.5 bg-[#543D00] rounded-full overflow-hidden"
           >
             <motion.div
               className="h-full bg-[#C79101]"
@@ -141,7 +255,31 @@ const SpaceTradeWrapped: React.FC = () => {
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto w-full h-full pt-7.5 sm:pt-8.5">
+          {stories[currentStory].type != "intro" &&
+            stories[currentStory].type != "outro" && (
+              <ShareDownload
+                download={
+                  stories[currentStory].type == "giftcard-moves"
+                    ? gcGetPng
+                    : stories[currentStory].type == "crypto-journey"
+                    ? cryptoGetPng
+                    : stories[currentStory].type == "best-month"
+                    ? monthGetPng
+                    : stories[currentStory].type == "utility"
+                    ? utilityGetPng
+                    : stories[currentStory].type == "impact"
+                    ? impactGetPng
+                    : stories[currentStory].type == "transactions"
+                    ? transactionsGetPng
+                    : stories[currentStory].type == "rank"
+                    ? rankGetPng
+                    : getPng
+                }
+                downloadLoading={loading}
+              />
+            )}
+
           <AnimatePresence mode="wait">{renderStory()}</AnimatePresence>
         </div>
       </div>
@@ -160,19 +298,25 @@ const SpaceTradeWrapped: React.FC = () => {
         </div>
       )}
 
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div
-          animate={{
-            background: [
-              "radial-gradient(circle at 20% 50%, rgba(199, 145, 1, 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 80% 50%, rgba(199, 145, 1, 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 50% 80%, rgba(199, 145, 1, 0.15) 0%, transparent 50%)",
-              "radial-gradient(circle at 20% 50%, rgba(199, 145, 1, 0.15) 0%, transparent 50%)",
-            ],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="w-full h-full"
-        />
+      <div
+        style={{
+          position: "fixed",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          opacity: 0.001,
+          zIndex: -100,
+          pointerEvents: "none",
+        }}
+      >
+        <TotalTradesExport userData={userData} ref={ref} />;
+        <BestMonthExport userData={userData} ref={monthRef} />;
+        <CryptoExport userData={userData} ref={cryptoRef} />;
+        <GiftcardExport userData={userData} ref={gcRef} />;
+        <UtilityExport ref={utilityRef} userData={userData} />
+        <ImpactExport userData={userData} ref={impactRef} />
+        <RankExport userData={userData} ref={rankRef} />
+        <TransactionsExport userData={userData} ref={transactionsRef} />
       </div>
 
       <FloatingParticles />

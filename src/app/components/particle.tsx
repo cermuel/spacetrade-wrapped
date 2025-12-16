@@ -11,7 +11,7 @@ const Particle: React.FC<{
 
   return (
     <motion.div
-      className="absolute w-1 h-1 bg-[#C79101] rounded-full"
+      className="absolute w-7 h-7 bg-[#C79101] rounded-full blur-sm"
       initial={initial}
       animate={{
         y: animateY,
