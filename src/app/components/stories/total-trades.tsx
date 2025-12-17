@@ -32,7 +32,7 @@ const TotalTrades = ({ userData }: { userData: UserData }) => {
       />
       <div className="flex flex-col items-center justify-center z-10">
         <motion.div className="w-max bg-[#FFFFFF1A] rounded-lg sm:rounded-[15px] p-[3px] sm:p-1">
-          <div className="bg-[#E03A6A] p-1.5 sm:p-2.5 rounded-lg sm:rounded-[15px]  w-52">
+          <div className="bg-[#E03A6A] p-1.5 sm:p-2.5 rounded-lg sm:rounded-[15px]  w-52 max-sm:w-28">
             <p className="font-bold max-sm:text-[9px] text-center">
               Your Year at a Glance
             </p>

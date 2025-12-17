@@ -116,13 +116,11 @@ const Intro = ({ userData }: { userData: UserData }) => {
                 type: "spring",
                 stiffness: 100,
               }}
-              className="flex items-center absolute pt-4 sm:pt-6  left-0 sm:w-[132px] w-[69px] h-auto"
+              className="flex items-center absolute sm:mt-10 mt-4 sm:ml-2 -rotate-12  left-0 sm:w-[132px] h-max w-max bg-[#FFFFFF1A] rounded-lg sm:rounded-[15px] p-[3px] sm:p-1"
             >
-              <motion.img
-                className="w-full h-full"
-                src={"/images/2025.svg"}
-                alt="logo"
-              />
+              <div className="bg-[#E03A6A] p-1.5 sm:p-2.5 rounded-lg sm:rounded-[15px] w-16 sm:w-32">
+                <p className="font-bold max-sm:text-[10px] text-center">2025</p>
+              </div>
             </motion.div>
           </div>
         </motion.div>
