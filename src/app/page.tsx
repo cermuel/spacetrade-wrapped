@@ -91,8 +91,11 @@ const SpaceTradeWrapped: React.FC = () => {
   const [isDownloadingAll, setIsDownloadingAll] = useState(false);
 
   const handleDownloadAll = async () => {
-    setIsDownloadingAll(true);
+    const confirmed = window.confirm("This will download 8 images. Continue?");
 
+    if (!confirmed) return;
+
+    setIsDownloadingAll(true);
     const downloads = [
       { name: "total-trades", fn: getPng },
       { name: "best-month", fn: monthGetPng },
@@ -103,7 +106,6 @@ const SpaceTradeWrapped: React.FC = () => {
       { name: "transactions", fn: transactionsGetPng },
       { name: "rank", fn: rankGetPng },
     ];
-
     for (const { name, fn } of downloads) {
       try {
         const dataUrl = await fn();
@@ -111,15 +113,15 @@ const SpaceTradeWrapped: React.FC = () => {
           const link = document.createElement("a");
           link.download = `spacetrade-wrapped-${name}.png`;
           link.href = dataUrl;
+          document.body.appendChild(link);
           link.click();
-
+          document.body.removeChild(link);
           await new Promise((resolve) => setTimeout(resolve, 500));
         }
       } catch (error) {
         console.error(`Failed to download ${name}:`, error);
       }
     }
-
     setIsDownloadingAll(false);
   };
 
