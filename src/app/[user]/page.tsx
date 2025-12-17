@@ -295,10 +295,6 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
     }
   };
 
-  useEffect(() => {
-    if (stories[currentStory].type == "rank") setIsPaused(true);
-  }, [currentStory]);
-
   return (
     <div className="relative w-full h-dvh bg-black overflow-hidden">
       <audio src="/audio/bg.wav" loop ref={audioRef} muted />
