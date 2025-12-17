@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { UserData } from "@/utils";
 import ShareDownload from "../share-download";
 import Image from "next/image";
+import { formatDollar } from "@/utils/helpers";
 
 const CryptoJourney = ({ userData }: { userData: UserData }) => {
   return (
@@ -40,18 +41,34 @@ const CryptoJourney = ({ userData }: { userData: UserData }) => {
         </motion.h1>
       </div>
       <div className="w-full max-w-[800px] flex items-end justify-center max-lg:mt-auto mt-6 max-h-[390px] gap-2 sm:gap-4 sm:max-h-[65dvh] h-full">
-        <Podium
-          position={3}
-          coin={{ name: "Ethereum", acronym: "ETH", icon: "/crypto/eth.svg" }}
-        />
-        <Podium
-          position={1}
-          coin={{ name: "Bitcoin", acronym: "BTC", icon: "/crypto/BTC.svg" }}
-        />
-        <Podium
-          position={2}
-          coin={{ name: "Solana", acronym: "SOL", icon: "/crypto/sol.svg" }}
-        />
+        {userData.top_cryptos.length > 0 &&
+          (() => {
+            const sorted = [...userData.top_cryptos].sort(
+              (a, b) => Number(b.usd_total) - Number(a.usd_total)
+            );
+
+            const displayOrder = [sorted[1], sorted[0], sorted[2]].filter(
+              Boolean
+            );
+
+            return displayOrder.map((crypto, i) => {
+              const rank = sorted.indexOf(crypto) + 1;
+              const positionValue = rank as 1 | 2 | 3;
+
+              return (
+                <Podium
+                  key={crypto.crypto_symbol || i}
+                  position={positionValue}
+                  coin={{
+                    name: crypto.crypto.name,
+                    acronym: crypto.crypto_symbol ?? crypto.crypto.code,
+                    icon: crypto.crypto.icon ?? "/crypto/eth.svg",
+                  }}
+                  amount={Number(crypto.usd_total)}
+                />
+              );
+            });
+          })()}
       </div>
     </motion.div>
   );
@@ -62,10 +79,13 @@ export default CryptoJourney;
 const Podium = ({
   position,
   coin,
+  amount,
 }: {
   position: 1 | 2 | 3;
   coin: { name: string; acronym: string; icon: string };
+  amount: number;
 }) => {
+
   return (
     <motion.div
       initial={{
@@ -136,7 +156,7 @@ const Podium = ({
             Amount Traded
           </p>
           <h1 className="md:text-2xl sm:text-lg text-xs font-semibold ">
-            💰{`  `} $30,000
+            💰{`  `} {formatDollar(amount)}
           </h1>
         </div>
       </motion.div>

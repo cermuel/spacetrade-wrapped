@@ -1,6 +1,7 @@
 import { UserData } from "@/utils";
 import React, { Ref } from "react";
 import ExportWrapper from "../export-wrapper";
+import { formatDollar } from "@/utils/helpers";
 
 const CryptoExport = ({
   ref,
@@ -30,18 +31,34 @@ const CryptoExport = ({
         <h1 className="font-bold text-5xl">Your Crypto Journey</h1>
       </div>
       <div className="w-full max-w-[800px] flex items-end justify-center  max-h-[80%] h-full gap-4">
-        <Podium
-          position={3}
-          coin={{ name: "Ethereum", acronym: "ETH", icon: "/crypto/eth.svg" }}
-        />
-        <Podium
-          position={1}
-          coin={{ name: "Bitcoin", acronym: "BTC", icon: "/crypto/BTC.svg" }}
-        />
-        <Podium
-          position={2}
-          coin={{ name: "Solana", acronym: "SOL", icon: "/crypto/sol.svg" }}
-        />
+        {userData.top_cryptos.length > 0 &&
+          (() => {
+            const sorted = [...userData.top_cryptos].sort(
+              (a, b) => Number(b.usd_total) - Number(a.usd_total)
+            );
+
+            const displayOrder = [sorted[1], sorted[0], sorted[2]].filter(
+              Boolean
+            );
+
+            return displayOrder.map((crypto, i) => {
+              const rank = sorted.indexOf(crypto) + 1;
+              const positionValue = rank as 1 | 2 | 3;
+
+              return (
+                <Podium
+                  key={crypto.crypto_symbol || i}
+                  position={positionValue}
+                  coin={{
+                    name: crypto.crypto.name,
+                    acronym: crypto.crypto_symbol ?? crypto.crypto.code,
+                    icon: crypto.crypto.icon ?? "/crypto/eth.svg",
+                  }}
+                  amount={Number(crypto.usd_total)}
+                />
+              );
+            });
+          })()}
       </div>
     </ExportWrapper>
   );
@@ -52,9 +69,11 @@ export default CryptoExport;
 const Podium = ({
   position,
   coin,
+  amount,
 }: {
   position: 1 | 2 | 3;
   coin: { name: string; acronym: string; icon: string };
+  amount: number;
 }) => {
   return (
     <div
@@ -94,7 +113,10 @@ const Podium = ({
             height={70}
           />
           <p className="text-sm mt-4">Amount Traded</p>
-          <h1 className="text-2xl font-semibold">💰 $30,000</h1>
+          <h1 className="text-2xl font-semibold">
+            {" "}
+            💰{`  `} {formatDollar(amount)}
+          </h1>
         </div>
       </div>
     </div>

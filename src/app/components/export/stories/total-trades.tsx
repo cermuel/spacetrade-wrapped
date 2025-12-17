@@ -2,6 +2,7 @@
 import { UserData } from "@/utils";
 import React, { Ref } from "react";
 import ExportWrapper from "../export-wrapper";
+import { formatNaira } from "@/utils/helpers";
 
 const TotalTradesExport = ({
   ref,
@@ -44,16 +45,22 @@ const TotalTradesExport = ({
       </div>
       <div className="flex flex-col items-center justify-center gap-1 z-10">
         <p className="font-medium text-base">Total number of trades</p>
-        <h1 className="font-bold text-5xl text-[#C79101]">🚀 8</h1>
+        <h1 className="font-bold text-5xl text-[#C79101]">
+          🚀 {userData.total_trade.count}
+        </h1>
       </div>
       <div className="flex flex-col items-center justify-center gap-1 z-10">
         <p className="font-medium text-base">Total profit made</p>
-        <h1 className="font-bold text-5xl text-[#C79101]">💰 ₦8,000,000</h1>
+        <h1 className="font-bold text-5xl text-[#C79101]">
+          💰 {formatNaira(userData.total_trade.naira)}
+        </h1>
       </div>
       <p className="text-2xl font-medium z-10">
         You ranked in the{" "}
-        <span className="font-bold text-4xl text-[#C79101]">Top 0.2%</span> of
-        SpaceTraders.
+        <span className="font-bold text-4xl text-[#C79101]">
+          Top {userData.percentile_rank}%
+        </span>{" "}
+        of SpaceTraders.
       </p>
     </ExportWrapper>
   );

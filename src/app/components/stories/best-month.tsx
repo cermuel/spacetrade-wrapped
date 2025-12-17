@@ -20,15 +20,9 @@ const BestMonth = ({ userData }: { userData: UserData }) => {
   return (
     <motion.div
       key="best-month"
-      initial={{
-        transform: "translateX(40%)",
-        opacity: 0,
-      }}
-      animate={{
-        transform: "translateX(0)",
-        opacity: 1,
-      }}
-      exit={{ transform: "translateX(-40%)", opacity: 0 }}
+      initial={{ opacity: 0, transform: "scale(0.8)" }}
+      animate={{ opacity: 1, transform: "scale(1)" }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center text-center justify-center h-full sm:px-8 px-6 w-full relative"
       style={{
@@ -69,9 +63,9 @@ const BestMonth = ({ userData }: { userData: UserData }) => {
           ))}
         </motion.h1>
         <motion.div className="w-max bg-[#FFFFFF1A] rounded-lg sm:rounded-[15px] p-[3px] sm:p-1">
-          <div className="bg-[#E03A6A] p-1.5 sm:p-2.5 rounded-lg sm:rounded-[15px] sm:w-[260px] w-34">
+          <div className="bg-[#E03A6A] p-1.5 sm:p-2.5 rounded-lg sm:rounded-[15px] w-max">
             <p className="font-bold md:text-5xl sm:4xl text-2xl text-center">
-              ️🗓️ August
+              ️🗓️ {userData.best_month.month}
             </p>
           </div>
         </motion.div>
@@ -82,7 +76,10 @@ const BestMonth = ({ userData }: { userData: UserData }) => {
           className="max-sm:text-xs"
         >
           You made a total of{" "}
-          <span className="font-bold">250k trades 🚀! Boss level things</span>
+          <span className="font-bold">
+            {userData.best_month.trade_count} trades 🚀
+            <span className="w-1 inline-block"></span> Boss level things
+          </span>
         </motion.p>
       </div>
     </motion.div>

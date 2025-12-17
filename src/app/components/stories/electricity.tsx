@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { UserData } from "@/utils";
 import ShareDownload from "../share-download";
 import Image from "next/image";
+import { formatNumber } from "@/utils/helpers";
 
 const Electricity = ({ userData }: { userData: UserData }) => {
   return (
@@ -42,7 +43,14 @@ const Electricity = ({ userData }: { userData: UserData }) => {
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-between gap-4 w-full flex p-6">
           <div className="space-y-4 text-left">
             <p>Number of utility bills paid</p>
-            <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">25</h1>
+            <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+              {formatNumber(
+                userData.top_utility.reduce(
+                  (acc, curr) => acc + Number(curr.total || 0),
+                  0
+                )
+              )}
+            </h1>
           </div>
           <Image src={"/icons/gear.svg"} alt="" width={50} height={50} />
         </div>
@@ -50,7 +58,7 @@ const Electricity = ({ userData }: { userData: UserData }) => {
           <div className="space-y-4 text-left">
             <p>Your top biller</p>
             <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold ">
-              Electricity
+              {userData?.top_utility[0]?.type}
             </h1>
           </div>
           <Image src={"/icons/bulb.svg"} alt="" width={50} height={50} />

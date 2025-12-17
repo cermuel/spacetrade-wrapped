@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AppProvider from "./providers/AppProvider";
 
 export const metadata: Metadata = {
   title: "SpaceTrade Wrapped",
@@ -25,7 +26,9 @@ export default function RootLayout({
           rel="stylesheet"
         /> */}
       </head>
-      <body className={` antialiased`}>{children}</body>
+      <body className={` antialiased`}>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

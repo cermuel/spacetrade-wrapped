@@ -77,8 +77,8 @@ const Transactions = ({ userData }: { userData: UserData }) => {
       <div>
         <DonutChart
           className="sm:w-[280px] md:w-[350px] w-[200px]"
-          totalWithdrawal={1050000}
-          totalTransfer={750000}
+          totalWithdrawal={Number(userData.total_withdrawal.amount) ?? 0}
+          totalTransfer={Number(userData.total_transfer.amount) ?? 0}
         />
       </div>
     </motion.div>

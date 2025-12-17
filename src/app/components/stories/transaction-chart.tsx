@@ -35,7 +35,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
         <>
           <div className="absolute flex flex-col items-center justify-center text-center top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <p className="font-medium text-base">Total Amount</p>
-            <h1 className="text-[#C79101] font-bold text-5xl">
+            <h1 className="text-[#C79101] font-bold text-4xl">
               {formatNaira(total)}
             </h1>
           </div>
@@ -67,7 +67,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
             <p className="font-medium md:text-base sm:text-sm text-xs">
               Total Amount
             </p>
-            <h1 className="text-[#C79101] font-bold md:text-5xl sm:text-3xl text-lg">
+            <h1 className="text-[#C79101] font-bold md:text-4xl sm:text-3xl text-lg">
               {formatNaira(total)}
             </h1>
           </div>

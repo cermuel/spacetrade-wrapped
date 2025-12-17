@@ -26,13 +26,18 @@ const BestMonthExport = ({
           Your Best Trading Month
         </h1>
         <div className="w-max bg-[#FFFFFF1A] rounded-[15px] p-1">
-          <div className="bg-[#E03A6A] p-2.5 rounded-[15px] w-[260px]">
-            <p className="font-bold text-5xl text-center">️🗓️ August</p>
+          <div className="bg-[#E03A6A] p-2.5 rounded-[15px] w-max">
+            <p className="font-bold text-5xl text-center">
+              ️🗓️ {userData.best_month.month}
+            </p>
           </div>
         </div>
         <p>
           You made a total of{" "}
-          <span className="font-bold">250k trades 🚀! Boss level things</span>
+          <span className="font-bold">
+            {userData.best_month.trade_count} trades 🚀
+            <span className="w-1 inline-block"></span> Boss level things
+          </span>
         </p>
       </div>
     </ExportWrapper>

@@ -2,8 +2,7 @@
 import React from "react";
 import { easeOut, motion } from "framer-motion";
 import { UserData } from "@/utils";
-import ShareDownload from "../share-download";
-import Image from "next/image";
+import { formatDollar } from "@/utils/helpers";
 
 const GiftcardMoves = ({ userData }: { userData: UserData }) => {
   return (
@@ -55,7 +54,8 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
       >
         <p className="sm:text-sm text-xs">your Most traded giftcard</p>
         <motion.h1 className="font-bold sm:text-5xl text-2xl">
-          <span className="text-[#C79101]">#1 </span> Razer Gold
+          <span className="text-[#C79101]">#1 </span>{" "}
+          {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
         </motion.h1>
       </motion.div>
       <motion.div
@@ -77,7 +77,9 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
           transition={{ duration: 1, delay: 1.4, ease: easeOut }}
           className="h-full bg-[#E03A6A80] z-10 flex-1 rounded-[15px] items-center justify-center gap-4 w-full flex flex-col"
         >
-          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">$32M</h1>
+          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+            {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
+          </h1>
           <p>Total giftcard bought</p>
         </motion.div>
         <motion.div
@@ -86,13 +88,23 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
           transition={{ duration: 1, delay: 1.4, ease: easeOut }}
           className="h-full bg-[#E03A6A80] z-10 flex-1 rounded-[15px] items-center justify-center gap-4 w-full flex flex-col"
         >
-          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">$32M</h1>
+          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+            {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
+          </h1>
           <p>Total giftcard bought</p>
         </motion.div>
         <img
-          src="/giftcard/plate.svg"
-          className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2"
+          src={
+            userData?.top_gift_cards?.[0]?.gift_card.image ||
+            userData?.top_gift_cards?.[0]?.gift_card.brand_logo ||
+            "/giftcard/plate.svg"
+          }
+          className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2 overflow-hidden"
           alt=""
+          onError={(e) => {
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = "/giftcard/plate.svg";
+          }}
         />
       </motion.div>
     </motion.div>

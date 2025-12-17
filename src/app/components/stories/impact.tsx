@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { UserData } from "@/utils";
 import ShareDownload from "../share-download";
 import Image from "next/image";
+import { formatNaira } from "@/utils/helpers";
 
 const Impact = ({ userData }: { userData: UserData }) => {
   return (
@@ -39,14 +40,16 @@ const Impact = ({ userData }: { userData: UserData }) => {
 
       <div className="z-10 flex items-center relative w-full justify-center max-w-[800px] sm:h-40 h-[330px] gap-10 max-sm:flex-col">
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-center flex-col gap-4 w-full flex p-6">
-          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">25</h1>
+          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+            {userData?.total_referrals?.count}
+          </h1>
           <p>Number of refferals</p>
         </div>
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-center flex-col gap-4 w-full flex p-6">
           <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
-            245 days
+            {formatNaira(Number(userData.total_referrals.amount) ?? 0)}
           </h1>
-          <p>Total active days</p>
+          <p>Referral earnings</p>
         </div>
         <img
           src="/icons/impact.svg"
@@ -57,7 +60,7 @@ const Impact = ({ userData }: { userData: UserData }) => {
       <p className="sm:text-2xl text-xs font-medium z-10">
         That puts you in
         <span className="font-bold text-base sm:text-4xl text-[#C79101]">
-          Top 0.2%
+          Top {userData.percentile_rank}%
         </span>{" "}
         of SpaceTraders.
       </p>
