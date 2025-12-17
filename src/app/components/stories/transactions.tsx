@@ -2,12 +2,20 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { UserData } from "@/utils";
-import ShareDownload from "../share-download";
 import Image from "next/image";
-import TransactionChart from "./transaction-chart";
 import DonutChart from "./transaction-chart";
 
 const Transactions = ({ userData }: { userData: UserData }) => {
+  const text = `Blink and You Got Paid`;
+  const letters = text.split("");
+
+  const getDelay = (index: number) => {
+    if (index < 9) {
+      return 0.5 + 0.7 + (index - 5) * 0.1;
+    } else {
+      return 1.1 + 0.7 + (index - 5) * 0.1;
+    }
+  };
   return (
     <motion.div
       key="transactions"
@@ -45,8 +53,25 @@ const Transactions = ({ userData }: { userData: UserData }) => {
             </p>
           </div>
         </motion.div>
-        <motion.h1 className="font-bold sm:text-5xl text-2xl">
-          Blink and You Got Paid
+        <motion.h1
+          className="font-bold sm:text-5xl text-2xl"
+          initial="hidden"
+          animate="visible"
+        >
+          {letters.map((letter, index) => (
+            <motion.span
+              key={index}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className={letter === " " ? "inline-block sm:w-3 w-2" : ""}
+              transition={{
+                duration: 0.1,
+                delay: getDelay(index),
+              }}
+            >
+              {letter === " " ? "\u00A0" : letter}
+            </motion.span>
+          ))}
         </motion.h1>
       </div>
       <div>

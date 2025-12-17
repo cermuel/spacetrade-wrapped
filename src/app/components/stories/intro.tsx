@@ -41,6 +41,29 @@ const Intro = ({ userData }: { userData: UserData }) => {
       ></motion.div>
       <motion.div
         initial={{
+          transform: "scale(2)",
+        }}
+        animate={{
+          transform: "scale(1)",
+          position: "static",
+          y: 0,
+        }}
+        transition={{ duration: 1, delay: 1 }}
+        className="flex items-center justify-center gap-3 sm:hidden"
+      >
+        <motion.img
+          className="sm:w-[70px] w-9.5 aspect-square"
+          src={"/images/logo-icon.svg"}
+          alt="logo"
+        />
+        <motion.img
+          className="sm:h-[35px] h-4.5 w-auto"
+          src={"/images/logo-text.svg"}
+          alt="logo"
+        />
+      </motion.div>
+      <motion.div
+        initial={{
           transform: "scale(3)",
         }}
         animate={{
@@ -49,7 +72,7 @@ const Intro = ({ userData }: { userData: UserData }) => {
           y: 0,
         }}
         transition={{ duration: 1, delay: 1 }}
-        className="flex items-center justify-center gap-3"
+        className="flex items-center justify-center gap-3 max-sm:hidden"
       >
         <motion.img
           className="sm:w-[70px] w-9.5 aspect-square"

@@ -88,6 +88,41 @@ const SpaceTradeWrapped: React.FC = () => {
     transactionsLoading ||
     impactLoading;
 
+  const [isDownloadingAll, setIsDownloadingAll] = useState(false);
+
+  const handleDownloadAll = async () => {
+    setIsDownloadingAll(true);
+
+    const downloads = [
+      { name: "total-trades", fn: getPng },
+      { name: "best-month", fn: monthGetPng },
+      { name: "crypto-journey", fn: cryptoGetPng },
+      { name: "giftcard-moves", fn: gcGetPng },
+      { name: "utility", fn: utilityGetPng },
+      { name: "impact", fn: impactGetPng },
+      { name: "transactions", fn: transactionsGetPng },
+      { name: "rank", fn: rankGetPng },
+    ];
+
+    for (const { name, fn } of downloads) {
+      try {
+        const dataUrl = await fn();
+        if (dataUrl) {
+          const link = document.createElement("a");
+          link.download = `spacetrade-wrapped-${name}.png`;
+          link.href = dataUrl;
+          link.click();
+
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        }
+      } catch (error) {
+        console.error(`Failed to download ${name}:`, error);
+      }
+    }
+
+    setIsDownloadingAll(false);
+  };
+
   useEffect(() => {
     audioRef.current?.play().catch(() => {});
   }, []);
@@ -135,7 +170,7 @@ const SpaceTradeWrapped: React.FC = () => {
         }
         return prev + 1;
       });
-    }, 50);
+    }, 70);
 
     return () => clearInterval(interval);
   }, [currentStory, isPaused, stories.length]);
@@ -277,6 +312,12 @@ const SpaceTradeWrapped: React.FC = () => {
                     : getPng
                 }
                 downloadLoading={loading}
+                shareUrl={`${window.location.origin}${window.location.pathname}`}
+                shareTitle="My SpaceTrade 2025 Wrapped"
+                shareText="Check out my SpaceTrade 2025 Wrapped! 🚀"
+                onModalChange={(isOpen) => setIsPaused(isOpen)}
+                downloadAll={handleDownloadAll}
+                downloadAllLoading={isDownloadingAll}
               />
             )}
 
