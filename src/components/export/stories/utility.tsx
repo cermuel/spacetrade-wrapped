@@ -50,6 +50,13 @@ const UtilityExport = ({
           <h1 className="text-5xl">💡</h1>
         </div>
       </div>
+      {!userData?.top_utility[0] ||
+        (Number(userData?.top_utility?.[0]?.total) == 0 && (
+          <h1 className="font-medium sm:text-2xl max-w-[700px]">
+            You didn’t pay utility bills on SpaceTrade this year, maybe you had
+            other systems in place.
+          </h1>
+        ))}
     </ExportWrapper>
   );
 };

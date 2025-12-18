@@ -5,7 +5,10 @@ import { UserData } from "@/utils";
 import { formatNaira } from "@/utils/helpers";
 
 const Impact = ({ userData }: { userData: UserData }) => {
-  const text = `Your trades powered SpaceTrade`;
+  const text =
+    userData?.total_referrals?.count > 0
+      ? "Your Presence Made an Impact"
+      : "Refer Friends, Make an Impact";
   const letters = text.split("");
 
   const getDelay = (index: number) => {
@@ -87,18 +90,15 @@ const Impact = ({ userData }: { userData: UserData }) => {
           alt=""
         />
       </motion.div>
-      <div className="sm:text-2xl text-xs font-medium z-10 flex items-center">
-        That puts you in
-        <motion.p
-          initial={{ scale: 0, rotateZ: -20 }}
-          animate={{ scale: 1, rotateZ: 0 }}
-          transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
-          className="font-bold text-base sm:text-4xl px-1 text-transparent bg-gradient-to-r from-orange-400 via-red-500 to-orange-400 bg-clip-text"
-        >
-          Top {userData.percentile_rank}%
-        </motion.p>{" "}
-        of SpaceTraders.
-      </div>
+      {userData?.total_referrals?.count > 0 ? (
+        <div className="sm:text-2xl text-xs font-medium z-10 flex items-center">
+          You helped SpaceTrade grow this year by sharing with others 🚀
+        </div>
+      ) : (
+        <h1 className="font-medium sm:text-2xl max-w-[700px]">
+          Big impact doesn’t always start loud.
+        </h1>
+      )}
     </motion.div>
   );
 };

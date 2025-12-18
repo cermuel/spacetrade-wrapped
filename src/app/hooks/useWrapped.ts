@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 export interface WrappedResponse {
+  message?: string;
   user: User;
   year: number;
   total_trade: Total_trade;

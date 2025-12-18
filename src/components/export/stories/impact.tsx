@@ -28,7 +28,12 @@ const ImpactExport = ({
           <p className="font-bold text-center">Your Impact</p>
         </div>
       </div>
-      <h1 className="font-bold text-5xl">Your trades powered SpaceTrade</h1>
+
+      <h1 className="font-bold text-5xl">
+        {userData?.total_referrals?.count > 0
+          ? "Your Presence Made an Impact"
+          : "Refer Friends, Make an Impact"}
+      </h1>
       <div className="z-10 flex items-center relative w-full justify-center max-w-[800px] h-40 gap-10">
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-center flex-col gap-4 w-full flex p-6">
           <h1 className="text-5xl font-bold">
@@ -50,11 +55,15 @@ const ImpactExport = ({
           alt=""
         />
       </div>
-      <p className="text-2xl font-medium z-10">
-        That puts you in
-        <span className="font-bold text-4xl text-[#C79101]">Top 0.2%</span> of
-        SpaceTraders.
-      </p>
+      {userData?.total_referrals?.count > 0 ? (
+        <div className="sm:text-2xl text-xs font-medium z-10 flex items-center">
+          You helped SpaceTrade grow this year by sharing with others 🚀
+        </div>
+      ) : (
+        <h1 className="font-medium sm:text-2xl max-w-[700px]">
+          Big impact doesn’t always start loud.
+        </h1>
+      )}
     </ExportWrapper>
   );
 };

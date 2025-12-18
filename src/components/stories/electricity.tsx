@@ -71,12 +71,7 @@ const Electricity = ({ userData }: { userData: UserData }) => {
           <div className="space-y-4 text-left">
             <p>Number of utility bills paid</p>
             <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
-              {formatNumber(
-                userData.top_utility.reduce(
-                  (acc, curr) => acc + Number(curr.total || 0),
-                  0
-                )
-              )}
+              {formatNumber(Number(userData?.top_utility[0]?.total))}
             </h1>
           </div>
           <Image src={"/icons/gear.svg"} alt="" width={50} height={50} />
@@ -93,9 +88,24 @@ const Electricity = ({ userData }: { userData: UserData }) => {
               {userData?.top_utility[0]?.type}
             </h1>
           </div>
-          <Image src={"/icons/bulb.svg"} alt="" width={50} height={50} />
+          <Image
+            src={userData?.top_utility[0]?.service_icon ?? "/icons/bulb.svg"}
+            alt=""
+            width={50}
+            height={50}
+            onError={(e) => {
+              e.currentTarget.src = "/icons/bulb.svg";
+            }}
+          />
         </motion.div>
       </div>
+      {!userData?.top_utility[0] ||
+        (Number(userData?.top_utility?.[0]?.total) == 0 && (
+          <h1 className="font-medium sm:text-2xl max-w-[700px]">
+            You didn’t pay utility bills on SpaceTrade this year, maybe you had
+            other systems in place.
+          </h1>
+        ))}
     </motion.div>
   );
 };

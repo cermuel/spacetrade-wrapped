@@ -1,10 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState } from "react";
 import { easeOut, motion } from "framer-motion";
 import { UserData } from "@/utils";
-import { formatDollar } from "@/utils/helpers";
+import { formatDollar, formatNaira } from "@/utils/helpers";
 
 const GiftcardMoves = ({ userData }: { userData: UserData }) => {
+  const [imageError, setImageError] = useState(false);
   return (
     <motion.div
       key="giftcard-moves"
@@ -46,18 +47,24 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
           ))}
         </motion.h1>
       </div>
-      <motion.div
-        initial={{ transform: "translateY(100%)", opacity: 0 }}
-        animate={{ transform: "translateY(0)", opacity: 1 }}
-        transition={{ duration: 1, delay: 1, ease: easeOut }}
-        className="flex flex-col items-center justify-center z-10"
-      >
-        <p className="sm:text-sm text-xs">your Most traded giftcard</p>
-        <motion.h1 className="font-bold sm:text-5xl text-2xl">
-          <span className="text-[#C79101]">#1 </span>{" "}
-          {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
-        </motion.h1>
-      </motion.div>
+      {userData?.top_gift_cards?.[0]?.gift_card ? (
+        <motion.div
+          initial={{ transform: "translateY(100%)", opacity: 0 }}
+          animate={{ transform: "translateY(0)", opacity: 1 }}
+          transition={{ duration: 1, delay: 1, ease: easeOut }}
+          className="flex flex-col items-center justify-center z-10"
+        >
+          <p className="sm:text-sm text-xs">your Most traded giftcard</p>
+          <motion.h1 className="font-bold sm:text-5xl text-2xl">
+            <span className="text-[#C79101]">#1 </span>{" "}
+            {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
+          </motion.h1>
+        </motion.div>
+      ) : (
+        <h1 className="font-medium sm:text-2xl">
+          You didn’t trade giftcards this year
+        </h1>
+      )}
       <motion.div
         initial={{ transform: "translateY(100%)", opacity: 0 }}
         animate={{ transform: "translateY(0)", opacity: 1 }}
@@ -92,7 +99,7 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
             <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
               {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
             </h1>
-            <p>Total giftcard bought</p>
+            <p>Total giftcard traded</p>
           </motion.div>
           <motion.div
             initial={{ transform: "translateX(-10%)", opacity: 0 }}
@@ -101,25 +108,36 @@ const GiftcardMoves = ({ userData }: { userData: UserData }) => {
             className="h-full bg-[#E03A6A80] z-10 flex-1 rounded-[15px] items-center justify-center gap-4 w-full flex flex-col"
           >
             <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
-              {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
+              {formatNaira(userData?.top_gift_cards?.[0]?.naira_total ?? 0)}
             </h1>
-            <p>Total giftcard bought</p>
+            <p>Total giftcard traded</p>
           </motion.div>
           <img
             src={
               userData?.top_gift_cards?.[0]?.gift_card.image ||
-              userData?.top_gift_cards?.[0]?.gift_card.brand_logo ||
-              "/giftcard/plate.svg"
+              userData?.top_gift_cards?.[0]?.gift_card.brand_logo
             }
+            hidden={imageError}
             className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2 overflow-hidden"
             alt=""
             onError={(e) => {
-              const target = e.currentTarget as HTMLImageElement;
-              target.src = "/giftcard/plate.svg";
+              setImageError(true);
             }}
           />
+          {imageError && (
+            <img
+              src="/icons/impact.svg"
+              className="sm:w-30 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2"
+              alt=""
+            />
+          )}
         </motion.div>
       </motion.div>
+      {!userData?.top_gift_cards?.[0]?.gift_card && (
+        <h1 className="font-medium sm:text-xl">
+          Your moment might just be next year.
+        </h1>
+      )}
     </motion.div>
   );
 };

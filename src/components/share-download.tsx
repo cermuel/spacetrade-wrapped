@@ -7,6 +7,8 @@ import { BsTelegram } from "react-icons/bs";
 import { FaTwitter } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import Image from "next/image";
+import { UserData } from "@/utils";
+import { getDiceBearAvatar } from "@/utils/helpers";
 
 interface ShareOption {
   id: string;
@@ -25,6 +27,7 @@ interface ShareDownloadProps {
   onModalChange?: (isOpen: boolean) => void;
   downloadAll?: () => Promise<void>;
   downloadAllLoading?: boolean;
+  userData: UserData;
 }
 
 const ShareDownload: React.FC<ShareDownloadProps> = ({
@@ -36,6 +39,7 @@ const ShareDownload: React.FC<ShareDownloadProps> = ({
   onModalChange,
   downloadAll,
   downloadAllLoading,
+  userData,
 }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -74,6 +78,12 @@ const ShareDownload: React.FC<ShareDownloadProps> = ({
     );
   };
 
+  const handleSnapchatShare = () => {
+    const url = encodeURIComponent(shareUrl);
+
+    window.open(`https://www.snapchat.com/scan?attachmentUrl=${url}`, "_blank");
+  };
+
   const handleNativeShare = async () => {
     handleModalChange(true);
     setIsShareModalOpen(true);
@@ -101,6 +111,7 @@ const ShareDownload: React.FC<ShareDownloadProps> = ({
       action: handleTelegramShare,
       color: "bg-blue-500",
     },
+
     {
       id: "twitter",
       name: "Twitter",
@@ -124,6 +135,27 @@ const ShareDownload: React.FC<ShareDownloadProps> = ({
             height={42}
             className="max-sm:scale-90"
           />
+          <h1 className="text-lg sm:text-2xl font-medium max-sm:-ml-2">X</h1>
+          <img
+            src={
+              userData.user.photo ||
+              getDiceBearAvatar(userData.user.username || "", "any")
+            }
+            alt=""
+            width={35}
+            height={35}
+            className="border border-white rounded-full sm:w-8.5 w-7 aspect-square object-cover"
+            onError={(e) => {
+              const target = e.currentTarget as HTMLImageElement;
+              target.src = getDiceBearAvatar(
+                userData.user.username || "",
+                "any"
+              );
+            }}
+          />
+          <h2 className="font-bold max-sm:text-sm">
+            @{userData.user.username}
+          </h2>
           <button
             onClick={download}
             disabled={downloadLoading}

@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "sandbox.getspacetrade.com",
+        port: "",
+        pathname: "/**",
+      },
 
       {
         protocol: "https",

@@ -38,13 +38,19 @@ const GiftcardExport = ({
         </div>
         <h1 className="font-bold sm:text-5xl text-2xl">Your Giftcard Moves</h1>
       </div>
-      <div className="flex flex-col items-center justify-center z-10">
-        <p className="sm:text-sm text-xs">your Most traded giftcard</p>
-        <h1 className="font-bold sm:text-5xl text-2xl">
-          <span className="text-[#C79101]">#1 </span>{" "}
-          {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
+      {userData?.top_gift_cards?.[0]?.gift_card ? (
+        <div className="flex flex-col items-center justify-center z-10">
+          <p className="sm:text-sm text-xs">your Most traded giftcard</p>
+          <h1 className="font-bold sm:text-5xl text-2xl">
+            <span className="text-[#C79101]">#1 </span>{" "}
+            {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
+          </h1>
+        </div>
+      ) : (
+        <h1 className="font-medium text-2xl">
+          You didn’t trade giftcards this year
         </h1>
-      </div>
+      )}
       <div className="z-10 flex items-center relative w-full justify-center max-w-[800px] sm:h-40 h-[330px] gap-10 max-sm:flex-col sm:gap-6">
         <img
           src={"/bg/giftcard-blur.png"}
@@ -71,7 +77,7 @@ const GiftcardExport = ({
           className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2"
           alt=""
         /> */}
-        <img
+        {/* <img
           src={
             userData?.top_gift_cards?.[0]?.gift_card.image ||
             userData?.top_gift_cards?.[0]?.gift_card.brand_logo ||
@@ -83,7 +89,18 @@ const GiftcardExport = ({
             const target = e.currentTarget as HTMLImageElement;
             target.src = "/giftcard/plate.svg";
           }}
+        /> */}
+
+        <img
+          src="/icons/impact.svg"
+          className="w-34 aspect-square z-10 absolute left-1/2 -translate-x-1/2 overflow-hidden"
+          alt=""
         />
+        {!userData?.top_gift_cards?.[0]?.gift_card && (
+          <h1 className="font-medium text-xl">
+            Your moment might just be next year.
+          </h1>
+        )}
       </div>
     </ExportWrapper>
   );

@@ -64,18 +64,29 @@ const TotalTrades = ({ userData }: { userData: UserData }) => {
           💰 {formatNaira(userData.total_trade.naira)}
         </motion.h1>
       </motion.div>
-      <motion.p
-        initial={{ scale: 0, rotateY: 180 }}
-        animate={{ scale: 1, rotateY: 0 }}
-        transition={{ delay: 1.3, type: "spring", stiffness: 200, mass: 1.1 }}
-        className="sm:text-2xl text-xs font-medium z-10 max-w-97.5"
-      >
-        You ranked in the{" "}
-        <span className="font-bold text-base sm:text-4xl text-[#C79101]">
-          Top {userData.percentile_rank}%
-        </span>{" "}
-        of SpaceTraders.
-      </motion.p>
+      {userData.total_trade.count == 0 ? (
+        <motion.p
+          initial={{ scale: 0, rotateY: 180 }}
+          animate={{ scale: 1, rotateY: 0 }}
+          transition={{ delay: 1.3, type: "spring", stiffness: 200, mass: 1.1 }}
+          className="sm:text-2xl text-xs font-medium z-10 max-w-97.5"
+        >
+          2025 is a clean slate, and we are rooting for you all the way
+        </motion.p>
+      ) : (
+        <motion.p
+          initial={{ scale: 0, rotateY: 180 }}
+          animate={{ scale: 1, rotateY: 0 }}
+          transition={{ delay: 1.3, type: "spring", stiffness: 200, mass: 1.1 }}
+          className="sm:text-2xl text-xs font-medium z-10 max-w-97.5"
+        >
+          You ranked in the{" "}
+          <span className="font-bold text-base sm:text-4xl text-[#C79101]">
+            Top {userData.percentile_rank}%
+          </span>{" "}
+          of SpaceTraders.
+        </motion.p>
+      )}
     </motion.div>
   );
 };

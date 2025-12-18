@@ -28,6 +28,7 @@ import TransactionsExport from "../../components/export/stories/transactions";
 import { useWrappedData } from "../hooks/useWrapped";
 import { usePathname, useRouter } from "next/navigation";
 import { WrappedLoading } from "../../components/loading-screen";
+import { NoStats } from "@/components/no-stats";
 
 const SpaceTradeWrapped: React.FC = () => {
   const pathname = usePathname();
@@ -53,6 +54,9 @@ const SpaceTradeWrapped: React.FC = () => {
 
   if (mainLoading || !userData) {
     return <WrappedLoading username={pathname.slice(1)} />;
+  }
+  if (userData.message) {
+    return <NoStats username={pathname.slice(1)} />;
   }
 
   return <MainWrapped userData={userData} />;
@@ -379,6 +383,7 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
                 onModalChange={(isOpen) => setIsPaused(isOpen)}
                 downloadAll={handleDownloadAll}
                 downloadAllLoading={isDownloadingAll}
+                userData={userData}
               />
             )}
           <AnimatePresence mode="wait">{renderStory()}</AnimatePresence>

@@ -35,7 +35,7 @@ const CryptoJourney = ({ userData }: { userData: UserData }) => {
         </motion.h1>
       </div>
       <div className="w-full max-w-[800px] flex items-end justify-center max-lg:mt-auto mt-6 max-h-[390px] gap-2 sm:gap-4 sm:max-h-[65dvh] h-full">
-        {userData.top_cryptos.length > 0 &&
+        {userData.top_cryptos.length > 0 ? (
           (() => {
             const sorted = [...userData.top_cryptos].sort(
               (a, b) => Number(b.usd_total) - Number(a.usd_total)
@@ -62,7 +62,10 @@ const CryptoJourney = ({ userData }: { userData: UserData }) => {
                 />
               );
             });
-          })()}
+          })()
+        ) : (
+          <EmptyPodium />
+        )}
       </div>
     </motion.div>
   );
@@ -152,6 +155,47 @@ const Podium = ({
             💰{`  `} {formatDollar(amount)}
           </h1>
         </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const EmptyPodium = () => {
+  return (
+    <motion.div
+      initial={{
+        transform: "translateY(100%)",
+      }}
+      animate={{
+        transform: "translateY(0)",
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 70,
+        damping: 15,
+        delay: 1,
+      }}
+      style={{
+        overflow: "hidden",
+        willChange: "transform",
+      }}
+      className={`flex flex-col items-center max-h-[95%]`}
+    >
+      <h1 className="text-5xl sm:text-8xl">❤️</h1>
+      <h1 className="font-semibold text-lg md:text-2xl max-w-62.5">
+        Waiting to see you Trade next year
+      </h1>
+      <motion.div className="mt-4 relative">
+        <img
+          src={"/leaderboard/podium-1.svg"}
+          alt=""
+          className={`${"aspect-311/420"} max-sm:hidden`}
+        />
+        <img
+          src={"/leaderboard/podium-1-mobile.svg"}
+          alt=""
+          className="md:aspect-311/115  sm:hidden"
+        />
       </motion.div>
     </motion.div>
   );

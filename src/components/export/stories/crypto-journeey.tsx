@@ -32,7 +32,7 @@ const CryptoExport = ({
         <h1 className="font-bold text-5xl">Your Crypto Journey</h1>
       </div>
       <div className="w-full max-w-[800px] flex items-end justify-center  max-h-[80%] h-full gap-4">
-        {userData.top_cryptos.length > 0 &&
+        {userData.top_cryptos.length > 0 ? (
           (() => {
             const sorted = [...userData.top_cryptos].sort(
               (a, b) => Number(b.usd_total) - Number(a.usd_total)
@@ -59,7 +59,10 @@ const CryptoExport = ({
                 />
               );
             });
-          })()}
+          })()
+        ) : (
+          <EmptyPodium />
+        )}
       </div>
     </ExportWrapper>
   );
@@ -119,6 +122,30 @@ const Podium = ({
             💰{`  `} {formatDollar(amount)}
           </h1>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const EmptyPodium = () => {
+  return (
+    <div
+      style={{
+        overflow: "hidden",
+        willChange: "transform",
+      }}
+      className={`flex flex-col items-center max-h-[95%]`}
+    >
+      <h1 className="text-7xl">❤️</h1>
+      <h1 className="font-semibold text-2xl max-w-62.5">
+        Waiting to see you Trade next year
+      </h1>
+      <div className="mt-4 relative">
+        <img
+          src={"/leaderboard/podium-1.svg"}
+          alt=""
+          className={`${"aspect-311/420"}`}
+        />
       </div>
     </div>
   );
