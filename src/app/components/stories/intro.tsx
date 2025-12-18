@@ -149,6 +149,10 @@ const Intro = ({ userData }: { userData: UserData }) => {
           width={35}
           className="w-9 h-9 rounded-full overflow-hidden object-cover"
           height={35}
+          onError={(e) => {
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = getDiceBearAvatar(userData.user.username || "", "any");
+          }}
         />
         <p className="font-bold">@{userData.user.username}</p>
       </motion.div>

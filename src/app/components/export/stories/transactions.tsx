@@ -12,6 +12,7 @@ const TransactionsExport = ({
 }) => {
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       style={{
         backgroundImage: "url('/bg/transactions.png')",
@@ -20,10 +21,10 @@ const TransactionsExport = ({
         backgroundRepeat: "no-repeat",
       }}
       className="relative"
-      wrapperClassName="flex flex-col items-center text-center justify-center h-full gap-24 px-8 w-full"
+      wrapperClassName="flex flex-col items-center text-center pt-20 h-full gap-24 px-8 w-full"
     >
       <img
-        src={"/bg/transactions-circle.png"}
+        src={"/bg/transactions-circle.svg"}
         className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
         alt=""
         width={600}

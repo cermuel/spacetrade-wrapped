@@ -1,6 +1,7 @@
 import { UserData } from "@/utils";
 import React, { Ref } from "react";
 import ExportWrapper from "../export-wrapper";
+import { formatDollar } from "@/utils/helpers";
 
 const GiftcardExport = ({
   ref,
@@ -11,6 +12,7 @@ const GiftcardExport = ({
 }) => {
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       style={{
         backgroundImage: "url('/bg/best-month-desktop.png')",
@@ -39,7 +41,8 @@ const GiftcardExport = ({
       <div className="flex flex-col items-center justify-center z-10">
         <p className="sm:text-sm text-xs">your Most traded giftcard</p>
         <h1 className="font-bold sm:text-5xl text-2xl">
-          <span className="text-[#C79101]">#1 </span> Razer Gold
+          <span className="text-[#C79101]">#1 </span>{" "}
+          {userData?.top_gift_cards[0]?.gift_card?.title ?? "None"}
         </h1>
       </div>
       <div className="z-10 flex items-center relative w-full justify-center max-w-[800px] sm:h-40 h-[330px] gap-10 max-sm:flex-col sm:gap-6">
@@ -51,17 +54,35 @@ const GiftcardExport = ({
           height={500}
         />
         <div className="h-full bg-[#E03A6A80] z-10 flex-1 rounded-[15px] items-center justify-center gap-4 w-full flex flex-col">
-          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">$32M</h1>
+          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+            {" "}
+            {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
+          </h1>
           <p>Total giftcard bought</p>
         </div>
         <div className="h-full bg-[#E03A6A80] z-10 flex-1 rounded-[15px] items-center justify-center gap-4 w-full flex flex-col">
-          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">$32M</h1>
+          <h1 className="md:text-5xl sm:text-3xl text-2xl font-bold">
+            {formatDollar(userData?.top_gift_cards?.[0]?.usd_total ?? 0)}
+          </h1>
           <p>Total giftcard bought</p>
         </div>
-        <img
+        {/* <img
           src="/giftcard/plate.svg"
           className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2"
           alt=""
+        /> */}
+        <img
+          src={
+            userData?.top_gift_cards?.[0]?.gift_card.image ||
+            userData?.top_gift_cards?.[0]?.gift_card.brand_logo ||
+            "/giftcard/plate.svg"
+          }
+          className="sm:w-34 aspect-square w-28 z-10 absolute left-1/2 -translate-x-1/2 overflow-hidden"
+          alt=""
+          onError={(e) => {
+            const target = e.currentTarget as HTMLImageElement;
+            target.src = "/giftcard/plate.svg";
+          }}
         />
       </div>
     </ExportWrapper>

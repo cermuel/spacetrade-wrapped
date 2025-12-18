@@ -39,6 +39,7 @@ const RankExport = ({
   };
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       className="relative"
       wrapperClassName="flex flex-col items-center text-center pt-28 h-full gap-10 px-8 w-full"
@@ -58,13 +59,14 @@ const RankExport = ({
         }}
         className="rounded-[20px] p-6 flex items-center justify-center gap-4 shadow-2xl"
       >
-        <img
+        {/* <img
           src={userData.badge.badge}
           alt=""
           className="w-22.5 h-30"
           width={90}
           height={120}
-        />
+          crossOrigin="anonymous"
+        /> */}
         <div>
           <h1 className="font-bold text-[40px]">{userData.badge.title}</h1>
           <div

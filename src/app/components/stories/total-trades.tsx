@@ -42,32 +42,32 @@ const TotalTrades = ({ userData }: { userData: UserData }) => {
           Here’s how far you’ve come
         </motion.h1>
       </div>
-      <motion.div
-        initial={{ transform: "translateY(100%)", opacity: 0 }}
-        animate={{ transform: "translateY(0)", opacity: 1 }}
-        transition={{ duration: 1, delay: 0.3, ease: easeOut }}
-        className="flex flex-col items-center justify-center gap-1 z-10"
-      >
+      <motion.div className="flex flex-col items-center justify-center gap-1 z-10">
         <p className="font-medium max-sm:text-xs">Total number of trades</p>
-        <motion.h1 className="font-bold sm:text-5xl text-2xl text-[#C79101]">
+        <motion.h1
+          initial={{ scale: 0, rotateY: 180 }}
+          animate={{ scale: 1, rotateY: 0 }}
+          transition={{ delay: 0.4, type: "spring", stiffness: 200 }}
+          className="font-bold sm:text-5xl text-2xl text-[#C79101]"
+        >
           🚀 {userData.total_trade.count}
         </motion.h1>
       </motion.div>
-      <motion.div
-        initial={{ transform: "translateY(100%)", opacity: 0 }}
-        animate={{ transform: "translateY(0)", opacity: 1 }}
-        transition={{ duration: 1, delay: 0.6, ease: easeOut }}
-        className="flex flex-col items-center justify-center gap-1 z-10"
-      >
+      <motion.div className="flex flex-col items-center justify-center gap-1 z-10">
         <p className="font-medium max-sm:text-xs">Total profit made</p>
-        <motion.h1 className="font-bold sm:text-5xl text-2xl text-[#C79101]">
+        <motion.h1
+          initial={{ scale: 0, rotateY: 180 }}
+          animate={{ scale: 1, rotateY: 0 }}
+          transition={{ delay: 0.9, type: "spring", stiffness: 200, mass: 1.1 }}
+          className="font-bold sm:text-5xl text-2xl text-[#C79101]"
+        >
           💰 {formatNaira(userData.total_trade.naira)}
         </motion.h1>
       </motion.div>
       <motion.p
-        initial={{ transform: "translateY(100%)", opacity: 0 }}
-        animate={{ transform: "translateY(0)", opacity: 1 }}
-        transition={{ duration: 1, delay: 1, ease: easeOut }}
+        initial={{ scale: 0, rotateY: 180 }}
+        animate={{ scale: 1, rotateY: 0 }}
+        transition={{ delay: 1.3, type: "spring", stiffness: 200, mass: 1.1 }}
         className="sm:text-2xl text-xs font-medium z-10 max-w-97.5"
       >
         You ranked in the{" "}

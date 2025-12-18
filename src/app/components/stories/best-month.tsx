@@ -23,7 +23,7 @@ const BestMonth = ({ userData }: { userData: UserData }) => {
       initial={{ opacity: 0, transform: "scale(0.8)" }}
       animate={{ opacity: 1, transform: "scale(1)" }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      transition={{ type: "spring", mass: 1.5, stiffness: 120 }}
       className="flex flex-col items-center text-center justify-center h-full sm:px-8 px-6 w-full relative"
       style={{
         backgroundImage: "url('/bg/best-month-desktop.png')",

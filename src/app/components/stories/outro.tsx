@@ -1,8 +1,64 @@
 /* eslint-disable react/no-unescaped-entities */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { UserData } from "@/utils";
 import Image from "next/image";
+
+const TypingText = () => {
+  const phrases = [
+    "Here's to more wins in 2026! 🚀",
+    "Here's to more trades in 2026! 🚀",
+    "Here's to zero drama in 2026! 🚀",
+    "Here's to more success in 2026! 🚀",
+  ];
+
+  const [displayText, setDisplayText] = useState("");
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentPhrase = phrases[phraseIndex];
+    const baseText = "Here's to ";
+
+    const timer = setTimeout(
+      () => {
+        if (!isDeleting) {
+          if (charIndex < currentPhrase.length) {
+            setDisplayText(currentPhrase.substring(0, charIndex + 1));
+            setCharIndex((prev) => prev + 1);
+          } else {
+            setTimeout(() => {
+              setIsDeleting(true);
+            }, 1500);
+          }
+        } else {
+          if (displayText.length > baseText.length) {
+            setDisplayText((prev) => prev.slice(0, -1));
+          } else {
+            setIsDeleting(false);
+            setPhraseIndex((prev) => (prev + 1) % phrases.length);
+            setCharIndex(baseText.length);
+          }
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timer);
+  }, [displayText, charIndex, isDeleting, phraseIndex]);
+
+  return (
+    <p className="text-gray-300 md:text-2xl text-xl text-center max-w-md">
+      {displayText}
+      <motion.span
+        animate={{ opacity: [1, 0] }}
+        transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+        className="inline-block w-0.5 h-5 md:h-6 bg-gray-300 ml-1 align-middle"
+      />
+    </p>
+  );
+};
 
 const Outro = ({
   handleReplay,
@@ -33,14 +89,14 @@ const Outro = ({
         Thanks for trading with
       </motion.h2>
       <motion.div
-      // animate={{
-      //   scale: [1, 1.1, 1],
-      // }}
-      // transition={{
-      //   duration: 2,
-      //   repeat: Infinity,
-      //   ease: "easeInOut",
-      // }}
+        animate={{
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       >
         <Image
           src="/images/logo-full.svg"
@@ -50,15 +106,13 @@ const Outro = ({
           height={82}
         />
       </motion.div>
-
-      <motion.p
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="text-gray-300 md:text-2xl text-xl text-center max-w-md"
       >
-        Here's to more trades, more wins, and zero drama in 2026! 🚀
-      </motion.p>
+        <TypingText />
+      </motion.div>
       <motion.button
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -71,5 +125,4 @@ const Outro = ({
     </motion.div>
   );
 };
-
 export default Outro;

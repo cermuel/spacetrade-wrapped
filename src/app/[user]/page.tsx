@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { UserData } from "@/utils";
 import Intro from "../components/stories/intro";
@@ -29,13 +29,6 @@ import { useWrappedData } from "../hooks/useWrapped";
 import { usePathname, useRouter } from "next/navigation";
 import { WrappedLoading } from "../components/loading-screen";
 
-const options = {
-  width: 1080,
-  height: 1080,
-  pixelRatio: 4,
-  backgroundColor: "#000",
-};
-
 const SpaceTradeWrapped: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
@@ -47,14 +40,14 @@ const SpaceTradeWrapped: React.FC = () => {
 
   useEffect(() => {
     if (error) router.replace("/");
-  }, [error]);
+  }, [error, router]);
+
   const [mainLoading, setMainLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setMainLoading(loadingData);
     }, 2000);
-
     return () => clearTimeout(timer);
   }, [loadingData]);
 
@@ -68,7 +61,17 @@ const SpaceTradeWrapped: React.FC = () => {
 export default SpaceTradeWrapped;
 
 const MainWrapped = ({ userData }: { userData: UserData }) => {
-  const router = useRouter();
+  const options = useMemo(
+    () => ({
+      width: 1080,
+      height: 1080,
+      pixelRatio: 4,
+      backgroundColor: "#000",
+    }),
+    []
+  );
+
+  // Only create hooks for exports that will be downloaded
   const { ref, isLoading, getPng } = useToImage(options);
   const {
     ref: gcRef,
@@ -110,6 +113,12 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [muted, setMuted] = useState(true);
+
+  // Track which exports have been rendered (lazy load them)
+  const [renderedExports, setRenderedExports] = useState<Set<string>>(
+    new Set()
+  );
+
   const audioRef = React.useRef<HTMLAudioElement>(null);
 
   const loading =
@@ -126,10 +135,27 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
 
   const handleDownloadAll = async () => {
     const confirmed = window.confirm("This will download 8 images. Continue?");
-
     if (!confirmed) return;
 
     setIsDownloadingAll(true);
+
+    // Render all exports first
+    setRenderedExports(
+      new Set([
+        "total-trades",
+        "best-month",
+        "crypto-journey",
+        "giftcard-moves",
+        "utility",
+        "impact",
+        "transactions",
+        "rank",
+      ])
+    );
+
+    // Wait for all exports to render
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
     const downloads = [
       { name: "total-trades", fn: getPng },
       { name: "best-month", fn: monthGetPng },
@@ -140,6 +166,7 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
       { name: "transactions", fn: transactionsGetPng },
       { name: "rank", fn: rankGetPng },
     ];
+
     for (const { name, fn } of downloads) {
       try {
         const dataUrl = await fn();
@@ -156,7 +183,22 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
         console.error(`Failed to download ${name}:`, error);
       }
     }
+
     setIsDownloadingAll(false);
+  };
+
+  // Lazy render export based on current story
+  const ensureExportRendered = (exportType: string) => {
+    if (!renderedExports.has(exportType)) {
+      setRenderedExports((prev) => new Set(prev).add(exportType));
+    }
+  };
+
+  const handleDownload = async (type: string, fn: () => Promise<string>) => {
+    ensureExportRendered(type);
+    // Wait a bit for the export to render
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    return fn();
   };
 
   useEffect(() => {
@@ -165,36 +207,31 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
 
   const handleUnmute = async () => {
     if (!audioRef.current) return;
-
-    if (muted) {
-      audioRef.current.muted = false;
-      setMuted(false);
-    } else {
-      audioRef.current.muted = true;
-      setMuted(true);
-    }
-
+    audioRef.current.muted = !muted;
+    setMuted(!muted);
     try {
       await audioRef.current.play();
     } catch {}
   };
 
-  const stories = [
-    { id: 1, type: "intro" },
-    { id: 2, type: "total-trades" },
-    { id: 3, type: "best-month" },
-    { id: 4, type: "crypto-journey" },
-    { id: 5, type: "giftcard-moves" },
-    { id: 6, type: "transactions" },
-    { id: 7, type: "utility" },
-    { id: 8, type: "impact" },
-    { id: 9, type: "rank" },
-    { id: 10, type: "outro" },
-  ];
+  const stories = useMemo(
+    () => [
+      { id: 1, type: "intro" },
+      { id: 2, type: "total-trades" },
+      { id: 3, type: "best-month" },
+      { id: 4, type: "crypto-journey" },
+      { id: 5, type: "giftcard-moves" },
+      { id: 6, type: "transactions" },
+      { id: 7, type: "utility" },
+      { id: 8, type: "impact" },
+      { id: 9, type: "rank" },
+      { id: 10, type: "outro" },
+    ],
+    []
+  );
 
   useEffect(() => {
     if (isPaused) return;
-
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -207,16 +244,11 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
         return prev + 1;
       });
     }, 70);
-
     return () => clearInterval(interval);
   }, [currentStory, isPaused, stories.length]);
 
   useEffect(() => {
-    if (loading) {
-      setIsPaused(true);
-    } else {
-      setIsPaused(false);
-    }
+    setIsPaused(loading);
   }, [loading]);
 
   const goToNext = () => {
@@ -237,7 +269,6 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const width = rect.width;
-
     if (x < width / 2) {
       goToPrev();
     } else {
@@ -247,38 +278,27 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
 
   const renderStory = () => {
     const story = stories[currentStory];
-    if (!userData) return;
-
-    // switch (story.type) {
+    if (!userData) return null;
 
     switch (story.type) {
       case "intro":
         return <Intro userData={userData} />;
-
       case "total-trades":
         return <TotalTrades userData={userData} />;
-
       case "best-month":
         return <BestMonth userData={userData} />;
-
       case "crypto-journey":
         return <CryptoJourney userData={userData} />;
-
       case "giftcard-moves":
         return <GiftcardMoves userData={userData} />;
-
       case "transactions":
         return <Transactions userData={userData} />;
-
       case "utility":
         return <Electricity userData={userData} />;
-
       case "impact":
         return <Impact userData={userData} />;
-
       case "rank":
         return <Rank userData={userData} />;
-
       case "outro":
         return (
           <Outro
@@ -289,10 +309,28 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
             }}
           />
         );
-
       default:
         return null;
     }
+  };
+
+  const getCurrentDownloadFn = () => {
+    const storyType = stories[currentStory].type;
+
+    const downloadMap: Record<string, () => Promise<string>> = {
+      "giftcard-moves": () => handleDownload("giftcard-moves", gcGetPng),
+      "crypto-journey": () => handleDownload("crypto-journey", cryptoGetPng),
+      "best-month": () => handleDownload("best-month", monthGetPng),
+      utility: () => handleDownload("utility", utilityGetPng),
+      impact: () => handleDownload("impact", impactGetPng),
+      transactions: () => handleDownload("transactions", transactionsGetPng),
+      rank: () => handleDownload("rank", rankGetPng),
+      "total-trades": () => handleDownload("total-trades", getPng),
+    };
+
+    return (
+      downloadMap[storyType] || (() => handleDownload("total-trades", getPng))
+    );
   };
 
   return (
@@ -300,7 +338,7 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
       <audio src="/audio/bg.wav" loop ref={audioRef} muted />
       <button
         onClick={handleUnmute}
-        className="absolute z-20 bottom-8 right-8  border border-[#212121] bg-[#171717] rounded-full w-10 aspect-square flex items-center justify-center cursor-pointer disabled:cursor-not-allowed!"
+        className="absolute z-20 bottom-8 right-8 border border-[#212121] bg-[#171717] rounded-full w-10 aspect-square flex items-center justify-center cursor-pointer"
       >
         {muted ? <GoMute /> : <GoUnmute />}
       </button>
@@ -330,26 +368,10 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
 
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="pointer-events-auto w-full h-full pt-7.5 sm:pt-8.5">
-          {stories[currentStory].type != "intro" &&
-            stories[currentStory].type != "outro" && (
+          {stories[currentStory].type !== "intro" &&
+            stories[currentStory].type !== "outro" && (
               <ShareDownload
-                download={
-                  stories[currentStory].type == "giftcard-moves"
-                    ? gcGetPng
-                    : stories[currentStory].type == "crypto-journey"
-                    ? cryptoGetPng
-                    : stories[currentStory].type == "best-month"
-                    ? monthGetPng
-                    : stories[currentStory].type == "utility"
-                    ? utilityGetPng
-                    : stories[currentStory].type == "impact"
-                    ? impactGetPng
-                    : stories[currentStory].type == "transactions"
-                    ? transactionsGetPng
-                    : stories[currentStory].type == "rank"
-                    ? rankGetPng
-                    : getPng
-                }
+                download={getCurrentDownloadFn()}
                 downloadLoading={loading}
                 shareUrl={`${window.location.origin}${window.location.pathname}`}
                 shareTitle="My SpaceTrade 2025 Wrapped"
@@ -359,7 +381,6 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
                 downloadAllLoading={isDownloadingAll}
               />
             )}
-
           <AnimatePresence mode="wait">{renderStory()}</AnimatePresence>
         </div>
       </div>
@@ -378,6 +399,7 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
         </div>
       )}
 
+      {/* Only render exports that have been requested */}
       <div
         style={{
           position: "fixed",
@@ -391,14 +413,30 @@ const MainWrapped = ({ userData }: { userData: UserData }) => {
       >
         {userData && (
           <>
-            <TotalTradesExport userData={userData} ref={ref} />;
-            <BestMonthExport userData={userData} ref={monthRef} />;
-            <CryptoExport userData={userData} ref={cryptoRef} />;
-            <GiftcardExport userData={userData} ref={gcRef} />;
-            <UtilityExport ref={utilityRef} userData={userData} />
-            <ImpactExport userData={userData} ref={impactRef} />
-            <RankExport userData={userData} ref={rankRef} />
-            <TransactionsExport userData={userData} ref={transactionsRef} />
+            {renderedExports.has("total-trades") && (
+              <TotalTradesExport userData={userData} ref={ref} />
+            )}
+            {renderedExports.has("best-month") && (
+              <BestMonthExport userData={userData} ref={monthRef} />
+            )}
+            {renderedExports.has("crypto-journey") && (
+              <CryptoExport userData={userData} ref={cryptoRef} />
+            )}
+            {renderedExports.has("giftcard-moves") && (
+              <GiftcardExport userData={userData} ref={gcRef} />
+            )}
+            {renderedExports.has("utility") && (
+              <UtilityExport ref={utilityRef} userData={userData} />
+            )}
+            {renderedExports.has("impact") && (
+              <ImpactExport userData={userData} ref={impactRef} />
+            )}
+            {renderedExports.has("rank") && (
+              <RankExport userData={userData} ref={rankRef} />
+            )}
+            {renderedExports.has("transactions") && (
+              <TransactionsExport userData={userData} ref={transactionsRef} />
+            )}
           </>
         )}
       </div>

@@ -10,15 +10,9 @@ const CryptoJourney = ({ userData }: { userData: UserData }) => {
   return (
     <motion.div
       key="crypto-journey"
-      initial={{
-        transform: "translateX(40%)",
-        opacity: 0,
-      }}
-      animate={{
-        transform: "translateX(0)",
-        opacity: 1,
-      }}
-      exit={{ transform: "translateX(-40%)", opacity: 0 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
       transition={{ duration: 0.6 }}
       className="flex flex-col items-center text-center justify-center h-full sm:px-8 px-6  w-full relative"
       style={{
@@ -85,7 +79,6 @@ const Podium = ({
   coin: { name: string; acronym: string; icon: string };
   amount: number;
 }) => {
-
   return (
     <motion.div
       initial={{

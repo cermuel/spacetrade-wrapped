@@ -1,6 +1,7 @@
 import { UserData } from "@/utils";
 import React, { Ref } from "react";
 import ExportWrapper from "../export-wrapper";
+import { formatNumber } from "@/utils/helpers";
 
 const UtilityExport = ({
   ref,
@@ -11,6 +12,7 @@ const UtilityExport = ({
 }) => {
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       className="relative"
       wrapperClassName="flex flex-col items-center text-center justify-center h-full gap-10 px-8 w-full"
@@ -25,16 +27,27 @@ const UtilityExport = ({
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-between gap-4 w-full flex p-6">
           <div className="space-y-4 text-left">
             <p>Number of utility bills paid</p>
-            <h1 className="text-5xl font-bold">25</h1>
+            <h1 className="text-5xl font-bold">
+              {" "}
+              {formatNumber(
+                userData.top_utility.reduce(
+                  (acc, curr) => acc + Number(curr.total || 0),
+                  0
+                )
+              )}
+            </h1>
           </div>
-          <img src={"/icons/gear.svg"} alt="" width={50} height={50} />
+          <h1 className="text-5xl">⚙️</h1>
         </div>
         <div className=" h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-between gap-4 w-full flex p-6">
           <div className="space-y-4 text-left">
             <p>Your top biller</p>
-            <h1 className="text-5xl font-bold">Electricity</h1>
+            <h1 className="text-5xl font-bold">
+              {" "}
+              {userData?.top_utility[0]?.type}
+            </h1>
           </div>
-          <img src={"/icons/bulb.svg"} alt="" width={50} height={50} />
+          <h1 className="text-5xl">💡</h1>
         </div>
       </div>
     </ExportWrapper>

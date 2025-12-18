@@ -1,6 +1,7 @@
 import { UserData } from "@/utils";
 import React, { Ref } from "react";
 import ExportWrapper from "../export-wrapper";
+import { formatNaira } from "@/utils/helpers";
 
 const ImpactExport = ({
   ref,
@@ -12,10 +13,11 @@ const ImpactExport = ({
   return (
     <ExportWrapper
       ref={ref}
+      userData={userData}
       className="relative"
       wrapperClassName="flex flex-col items-center text-center pt-28 h-full gap-10 px-8 w-full"
       style={{
-        backgroundImage: "url('/bg/impact-desktop.png')",
+        // backgroundImage: "url('/bg/impact-desktop.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -29,12 +31,18 @@ const ImpactExport = ({
       <h1 className="font-bold text-5xl">Your trades powered SpaceTrade</h1>
       <div className="z-10 flex items-center relative w-full justify-center max-w-[800px] h-40 gap-10">
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-center flex-col gap-4 w-full flex p-6">
-          <h1 className="text-5xl font-bold">25</h1>
+          <h1 className="text-5xl font-bold">
+            {" "}
+            {userData?.total_referrals?.count}
+          </h1>
           <p>Number of refferals</p>
         </div>
         <div className="h-full bg-[#6D500133] border border-[#543D00] z-10 flex-1 rounded-[15px] items-center justify-center flex-col gap-4 w-full flex p-6">
-          <h1 className="text-5xl font-bold">245 days</h1>
-          <p>Total active days</p>
+          <h1 className="text-5xl font-bold">
+            {" "}
+            {formatNaira(Number(userData.total_referrals.amount) ?? 0)}
+          </h1>
+          <p>Referral earnings</p>
         </div>
         <img
           src="/icons/impact.svg"

@@ -12,6 +12,7 @@ const CryptoExport = ({
 }) => {
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       style={{
         backgroundImage: "url('/bg/trades-desktop.png')",

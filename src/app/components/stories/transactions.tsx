@@ -19,16 +19,10 @@ const Transactions = ({ userData }: { userData: UserData }) => {
   return (
     <motion.div
       key="transactions"
-      initial={{
-        transform: "translateX(40%)",
-        opacity: 0,
-      }}
-      animate={{
-        transform: "translateX(0)",
-        opacity: 1,
-      }}
-      exit={{ transform: "translateX(-40%)", opacity: 0 }}
-      transition={{ duration: 0.6 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
       className="flex flex-col items-center text-center max-md:justify-center md:pt-20 h-full gap-24 sm:px-8 px-6  w-full relative"
       style={{
         backgroundImage: "url('/bg/transactions.png')",
@@ -38,7 +32,7 @@ const Transactions = ({ userData }: { userData: UserData }) => {
       }}
     >
       <Image
-        src={"/bg/transactions-circle.png"}
+        src={"/bg/transactions-circle.svg"}
         className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2"
         alt=""
         width={600}
@@ -74,13 +68,23 @@ const Transactions = ({ userData }: { userData: UserData }) => {
           ))}
         </motion.h1>
       </div>
-      <div>
+      <motion.div
+        animate={{
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.8,
+        }}
+      >
         <DonutChart
           className="sm:w-[280px] md:w-[350px] w-[200px]"
           totalWithdrawal={Number(userData.total_withdrawal.amount) ?? 0}
           totalTransfer={Number(userData.total_transfer.amount) ?? 0}
         />
-      </div>
+      </motion.div>
     </motion.div>
   );
 };

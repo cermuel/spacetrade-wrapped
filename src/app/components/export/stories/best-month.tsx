@@ -11,6 +11,7 @@ const BestMonthExport = ({
 }) => {
   return (
     <ExportWrapper
+      userData={userData}
       ref={ref}
       style={{
         backgroundImage: "url('/bg/best-month-desktop.png')",

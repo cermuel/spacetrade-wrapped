@@ -1,6 +1,7 @@
 import React, { ReactNode, Ref } from "react";
 import ExportHeader from "./export-header";
 import ExportFooter from "./export-footer";
+import { UserData } from "@/utils";
 
 const ExportWrapper = ({
   ref,
@@ -8,12 +9,14 @@ const ExportWrapper = ({
   children,
   style,
   wrapperClassName,
+  userData,
 }: {
   ref: Ref<HTMLElement> | undefined;
   className?: string;
   children: ReactNode;
   style?: React.CSSProperties;
   wrapperClassName?: string;
+  userData: UserData;
 }) => {
   return (
     <main
@@ -21,7 +24,7 @@ const ExportWrapper = ({
       ref={ref}
       className={`w-5xl overflow-hidden aspect-square ${className} p-10 gap-10 flex flex-col`}
     >
-      <ExportHeader />
+      <ExportHeader userData={userData} />
       <div className={`flex-1 ${wrapperClassName}`}>{children}</div>
       <ExportFooter />
     </main>
